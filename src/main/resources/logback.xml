@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="300000">
+    <!--设置logPath的变量，变量的值：/Webapp/springboot-mybatis-demo/log -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level> <!-- 日志过滤级别 -->
+        </filter>
+        <encoder>
+            <pattern>[%date{yyyy-MM-dd HH:mm:ss.SSS}] %X{logthreadId} %-5level %logger{80} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--RollingFileAppender:滚动文件-->
+    <appender name="errorLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--log文件名称-->
+        <file>${user.dir}/nomalSaveIoTDB/error/error.log</file>
+        <!---->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level> <!-- 日志过滤级别 -->
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/nomalSaveIoTDB/error/error.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--log文件最大值-->
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!--log文件保留最长时间-->
+            <maxHistory>31</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread]---[%5level] [%logger{50}] [%M line:%L]  :%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="normalLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.dir}/nomalSaveIoTDB/normal/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${user.dir}/nomalSaveIoTDB/normal/info.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>31</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%date] [%thread]---[%level] [%logger{50}] [%M line:%L]  :%msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">-->
+        <!--<appender-ref ref="normalLog" />-->
+        <!--&lt;!&ndash; add the following line &ndash;&gt;-->
+        <!--<includeCallerData>true</includeCallerData>-->
+    <!--</appender>-->
+
+    <!--使用上面定义的appender-->
+    <root level="INFO">
+       <appender-ref ref="normalLog"/>
+        <!--<appender-ref ref="komtrax"/>-->
+        <appender-ref ref="errorLog"/>
+        <!--<appender-ref ref="console"/>-->
+        <!--<appender-ref ref="ASYNC"/>-->
+    </root>
+
+
+</configuration>
