@@ -39,13 +39,6 @@ public class KafkaConsumerThread implements Runnable {
   private String tmnlID = "TmnlID@string";
   private KafkaStream<byte[], byte[]> stream;
   private static Set<String> cache = new HashSet<>();
-  public static String[] exceptSensors = {
-    "TY_0002_00_17", "TY_0002_00_18",
-    "TY_0002_00_19", "TY_0002_00_20",
-    "TY_0002_00_21", "TY_0002_00_22",
-    "TY_0002_00_23", "TY_0002_00_23_Hour",
-    "TY_0002_00_24"
-  };
 
   private static BlockingQueue<Runnable> threadQueue = new LinkedBlockingQueue<Runnable>(100000);
 
@@ -120,17 +113,15 @@ public class KafkaConsumerThread implements Runnable {
 
         //createTimeSeries(transPacket, deviceId);
 
-        if (Long.parseLong(tmnlId) % 3 == 0) {
-          writeBaseMap(deviceIdList, timeList, metricLists, typeLists, valueLists, secondaryTime, baseInfoMap,
-              primaryTime, deviceId);
+        writeBaseMap(deviceIdList, timeList, metricLists, typeLists, valueLists, secondaryTime, baseInfoMap,
+            primaryTime, deviceId);
 
-          writeWorkMap(deviceIdList, timeList, metricLists, typeLists, valueLists, secondaryTime, workStatusMap,
-              primaryTime, customtime, randomLong, deviceId);
+        writeWorkMap(deviceIdList, timeList, metricLists, typeLists, valueLists, secondaryTime, workStatusMap,
+            primaryTime, customtime, randomLong, deviceId);
 
-          SessionInsertThread sessionThread = new SessionInsertThread(deviceIdList, timeList, metricLists, typeLists, valueLists);
-          //sessionPool.asyncInsertRecords(deviceIdList, timeList, metricLists, typeLists, valueLists);
-          insertThreadPool.submit(sessionThread);
-        }
+        SessionInsertThread sessionThread = new SessionInsertThread(deviceIdList, timeList, metricLists, typeLists, valueLists);
+        //sessionPool.asyncInsertRecords(deviceIdList, timeList, metricLists, typeLists, valueLists);
+        insertThreadPool.submit(sessionThread);
 
         /*
         long start = System.currentTimeMillis();
